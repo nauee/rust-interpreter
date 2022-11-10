@@ -1,6 +1,8 @@
 (ns interprete-rust.core
-  (:gen-class
-   :require [interprete-rust.rust]))
+  (:gen-class)
+  (:require [clojure.string :as s])
+  (:require [clojure.java.io])
+  (:require [clojure.edn]))
 
 (declare driver-loop)
 (declare escanear-arch)
@@ -1790,15 +1792,23 @@
 ; 
 ; nil
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn mapear_tokens [token]
-  (cond
-    (= token (symbol "{")) (str \newline "{" \newline " ")
-    (= token (symbol "}")) (str \newline "}" \newline)
-    (string? token) (str "\"" token "\"")
-    :else (str token)))
+(defn convertir_str [s] (str "\"" (clojure.string/escape s {\newline "\\n" \tab "\\t"}) "\""))
 
-(defn listar [tokens] 
-  (println (apply str (clojure.string/join " " (map mapear_tokens tokens)))))
+(defn mapear_tokens [token] (if (string? token) (convertir_str token) (str token)))
+
+(defn espacios_indent [n] (str \newline (apply str (repeat (* 2 n) " "))))
+
+(defn indentar [s cont]
+  (cond
+    (empty? s) ""
+    (= (first s) "{") (str (espacios_indent cont) "{" (espacios_indent (inc cont)) (indentar (rest s) (inc cont)))
+    (= (first s) "}") (str (espacios_indent (dec cont)) "}" (espacios_indent (dec cont)) (indentar (rest s) (dec cont)))
+    (= (first s) ";") (str ";" (espacios_indent cont) (indentar (rest s) cont))
+    :else (str (first s) " " (indentar (rest s) cont))))
+
+(defn borrar_lineas_vacias [s] (clojure.string/replace s #"\n\s*\n" "\n"))
+
+(defn listar [tokens] (println (borrar_lineas_vacias (indentar (map mapear_tokens tokens) 0))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; AGREGAR-PTOCOMA: Recibe una lista con los tokens de un programa en Rust y la devuelve con un token ; insertado a continuacion de ciertas } (llaves de cierre, pero no a continuacion de todas ellas).
