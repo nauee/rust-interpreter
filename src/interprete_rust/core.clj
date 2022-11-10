@@ -1790,7 +1790,15 @@
 ; 
 ; nil
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn listar [] ())
+(defn mapear_tokens [token]
+  (cond
+    (= token (symbol "{")) (str \newline "{" \newline " ")
+    (= token (symbol "}")) (str \newline "}" \newline)
+    (string? token) (str "\"" token "\"")
+    :else (str token)))
+
+(defn listar [tokens] 
+  (println (apply str (clojure.string/join " " (map mapear_tokens tokens)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; AGREGAR-PTOCOMA: Recibe una lista con los tokens de un programa en Rust y la devuelve con un token ; insertado a continuacion de ciertas } (llaves de cierre, pero no a continuacion de todas ellas).

@@ -2,6 +2,8 @@
   (:require [clojure.test :refer :all]
             [interprete-rust.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest listar-test
+  (testing "Listar") 
+  (is 
+   (= (with-out-str (listar (list 'fn 'main (symbol "(") (symbol ")") (symbol "{") 'println! (symbol "(") "Hola, mundo!" (symbol ")") (symbol "}"))))
+      "fn main ( ) \n{\n  println! ( \"Hola, mundo!\" ) \n}\n\r\n")))
