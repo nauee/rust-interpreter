@@ -14,15 +14,26 @@
    (= (agregar-ptocoma (list 'fn 'main (symbol "(") (symbol ")") (symbol "{") 'if 'x '< '0 (symbol "{") 'x '= '- 'x (symbol ";") (symbol "}") 'renglon '= 'x (symbol ";") 'if 'z '< '0 (symbol "{") 'z '= '- 'z (symbol ";") (symbol "}") (symbol "}") 'fn 'foo (symbol "(") (symbol ")") (symbol "{") 'if 'y '> '0 (symbol "{") 'y '= '- 'y (symbol ";") (symbol "}") 'else (symbol "{") 'x '= '- 'y (symbol ";") (symbol "}") (symbol "}")))
       (list 'fn 'main (symbol "(") (symbol ")") (symbol "{") 'if 'x '< '0 (symbol "{") 'x '= '- 'x (symbol ";") (symbol "}") (symbol ";") 'renglon '= 'x (symbol ";") 'if 'z '< '0 (symbol "{") 'z '= '- 'z (symbol ";") (symbol "}") (symbol "}") 'fn 'foo (symbol "(") (symbol ")") (symbol "{") 'if 'y '> '0 (symbol "{") 'y '= '- 'y (symbol ";") (symbol "}") 'else (symbol "{") 'x '= '- 'y (symbol ";") (symbol "}") (symbol "}")))))
 
-(deftest palabra-reservada
+(deftest palabra-reservada?-test
   (testing "Palabra reservada")
   (is
-   (= (palabra-reservada? "while") true))
+   (= (palabra-reservada? 'while) true))
   (is
-   (= (palabra-reservada? "if") true))
+   (= (palabra-reservada? 'if) true))
   (is
-   (= (palabra-reservada? "else") true))
+   (= (palabra-reservada? 'else) true))
   (is
    (= (palabra-reservada? 'until) false))
   (is
    (= (palabra-reservada? 13) false)))
+
+(deftest identificador?-test
+  (testing "Identificador")
+  (is
+   (= (identificador? 'boolean) true))
+  (is
+   (= (identificador? 'bool) false))
+  (is
+   (= (identificador? 'e120) true))
+  (is
+   (= (identificador? '12e0) false)))

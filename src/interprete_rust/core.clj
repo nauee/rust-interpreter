@@ -1837,7 +1837,7 @@
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn palabra-reservada? [s]
-  (let [reservadas (list "use" "const" "fn" "std" "io" "process" "Write" "i64" "f64" "bool" "usize" "char" "String" "mut" "let" "if" "else" "while" "return" "exit" "format!" "print!" "println!" "stdout" "stdin" "flush" "read_line" "expect" "new" "from" "as_str" "trim" "chars" "to_string" "parse" "nth" "unwrap" "as" "trim")]
+  (let [reservadas (list 'use 'const 'fn 'std 'io 'process 'Write 'i64 'f64 'bool 'usize 'char 'String 'mut 'let 'if 'else 'while 'return 'exit 'format! 'print! 'println! 'stdout 'stdin 'flush 'read_line 'expect 'new 'from 'as_str 'trim 'chars 'to_string 'parse 'nth 'unwrap 'as 'trim)]
     (some? (some #(= s %) reservadas))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1852,7 +1852,15 @@
 ; user=> (identificador? '12e0)
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn identificador? [] ())
+(defn identificador? [id]
+  (and (= (re-find #"[a-zA-Z]" (str id)) (str (first (str id)))) (not (palabra-reservada? id))))
+
+(identificador? 'boolean)
+(identificador? 'bool)
+(identificador? 'e120)
+(identificador? '12e0)
+
+(= (re-find #"[a-zA-Z]" "e120") (str (first "e120")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; DUMP: Recibe un vector con instrucciones de la RI y las imprime numeradas a partir de 0. Siempre devuelve nil.
