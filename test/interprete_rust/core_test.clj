@@ -38,21 +38,6 @@
   (is
    (= (identificador? '12e0) false)))
 
-; user=> (dump '[[POPREF 2] [PUSHFI 2] MUL [PUSHFI 1] ADD NEG])
-; 0 [POPREF 2]
-; 1 [PUSHFI 2]
-; 2 MUL
-; 3 [PUSHFI 1]
-; 4 ADD
-; 5 NEG
-; nil
-; user=> (dump '[HLT])
-; 0 HLT
-; nil
-; user=> (dump nil)
-; 0 nil
-; nil
-
 (deftest dump-test
   (testing "Dump")
   (is
@@ -64,3 +49,14 @@
   (is
     (= (with-out-str(dump nil))
         "0 nil\n")))
+
+(deftest ya-declarado-localmente?-test
+  (testing "Ya declarado localmente")
+  (is
+   (= (ya-declarado-localmente? 'Write [[0] [['io ['lib '()] 0] ['Write ['lib '()] 0] ['entero_a_hexa ['fn [(list ['n (symbol ":") 'i64]) 'String]] 2]]]) true))
+  (is
+   (= (ya-declarado-localmente? 'Read [[0] [['io ['lib '()] 0] ['Write ['lib '()] 0] ['entero_a_hexa ['fn [(list ['n (symbol ":") 'i64]) 'String]] 2]]]) false))
+  (is
+   (= (ya-declarado-localmente? 'Write [[0 1] [['io ['lib '()] 0] ['Write ['lib '()] 0] ['entero_a_hexa ['fn [(list ['n (symbol ":") 'i64]) 'String]] 2]]]) true))
+  (is
+   (= (ya-declarado-localmente? 'Write [[0 2] [['io ['lib '()] 0] ['Write ['lib '()] 0] ['entero_a_hexa ['fn [(list ['n (symbol ":") 'i64]) 'String]] 2]]]) false)))
