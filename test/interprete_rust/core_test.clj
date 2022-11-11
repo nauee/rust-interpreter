@@ -37,3 +37,30 @@
    (= (identificador? 'e120) true))
   (is
    (= (identificador? '12e0) false)))
+
+; user=> (dump '[[POPREF 2] [PUSHFI 2] MUL [PUSHFI 1] ADD NEG])
+; 0 [POPREF 2]
+; 1 [PUSHFI 2]
+; 2 MUL
+; 3 [PUSHFI 1]
+; 4 ADD
+; 5 NEG
+; nil
+; user=> (dump '[HLT])
+; 0 HLT
+; nil
+; user=> (dump nil)
+; 0 nil
+; nil
+
+(deftest dump-test
+  (testing "Dump")
+  (is
+    (= (with-out-str(dump '[[POPREF 2] [PUSHFI 2] MUL [PUSHFI 1] ADD NEG]))
+        "0 [POPREF 2]\n1 [PUSHFI 2]\n2 MUL\n3 [PUSHFI 1]\n4 ADD\n5 NEG\n"))
+  (is
+    (= (with-out-str(dump '[HLT]))
+        "0 HLT\n"))
+  (is
+    (= (with-out-str(dump nil))
+        "0 nil\n")))

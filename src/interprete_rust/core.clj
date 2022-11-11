@@ -1855,13 +1855,6 @@
 (defn identificador? [id]
   (and (= (re-find #"[a-zA-Z]" (str id)) (str (first (str id)))) (not (palabra-reservada? id))))
 
-(identificador? 'boolean)
-(identificador? 'bool)
-(identificador? 'e120)
-(identificador? '12e0)
-
-(= (re-find #"[a-zA-Z]" "e120") (str (first "e120")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; DUMP: Recibe un vector con instrucciones de la RI y las imprime numeradas a partir de 0. Siempre devuelve nil.
 ; Por ejemplo:
@@ -1880,7 +1873,10 @@
 ; 0 nil
 ; nil
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn dump [] ())
+(defn dump [inst]
+  (if (nil? inst)
+    (print "0 nil\n")
+    (print (apply str (map #(str (first %) " " (second %) \newline) (map-indexed list inst))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; YA-DECLARADO-LOCALMENTE?: Recibe un identificador y un contexto (un vector formado por dos subvectores: el primero
