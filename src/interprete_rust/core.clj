@@ -1836,7 +1836,9 @@
 ; user=> (palabra-reservada? 13)
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn palabra-reservada? [] ())
+(defn palabra-reservada? [s]
+  (let [reservadas (list "use" "const" "fn" "std" "io" "process" "Write" "i64" "f64" "bool" "usize" "char" "String" "mut" "let" "if" "else" "while" "return" "exit" "format!" "print!" "println!" "stdout" "stdin" "flush" "read_line" "expect" "new" "from" "as_str" "trim" "chars" "to_string" "parse" "nth" "unwrap" "as" "trim")]
+    (some? (some #(= s %) reservadas))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; IDENTIFICADOR?: Recibe un elemento y devuelve true si es un identificador valido en Rust; si no, false.
