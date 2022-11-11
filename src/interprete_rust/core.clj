@@ -1911,7 +1911,20 @@
 ; [; (fn main ( ) { println! ( "{}" , TRES ) }) [use std :: io ; const TRES : i64 = 3] :sin-errores [[0] [[io [lib ()] 0] [TRES [const i64] 3]]] 0 [[CAL 0] HLT] []]
 ;                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn cargar-const-en-tabla [] ())
+(defn obtener-terna [simbolos]
+  (let [pos (first (keep-indexed #(if (= %2 'const) %1) simbolos))
+        id (nth simbolos (+ pos 1))
+        tipo (nth simbolos (+ pos 3))
+        valor (nth simbolos (+ pos 5))]
+    [id ['const tipo] valor]))
+
+(defn cargar-const-en-tabla [ambiente]
+  (let [estado (nth ambiente 3)]
+    (if (not= estado :sin-errores) ambiente
+      (let [contexto (nth ambiente 4)
+            simb-ya-parseados (nth ambiente 2)
+            terna (obtener-terna simb-ya-parseados)]
+        (assoc ambiente 4 (vector (first contexto) (conj (second contexto) terna)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; INICIALIZAR-CONTEXTO-LOCAL: Recibe un ambiente y, si su estado no es :sin-errores, lo devuelve intacto.
