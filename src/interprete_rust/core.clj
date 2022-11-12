@@ -2020,7 +2020,7 @@
             tamano (count bytecode)]
         (if (not= (nth bytecode pos_jump) ['JMP '?])
           ambiente
-          (assoc ambiente 6 (assoc bytecode pos_jump ['JMP tamano])))))))
+          (assoc-in ambiente [6 pos_jump] ['JMP tamano]))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CONVERTIR-FORMATO-IMPRESION: Recibe una lista con los argumentos de print! de Rust y devuelve una lista con los
