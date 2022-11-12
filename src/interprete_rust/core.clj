@@ -2035,8 +2035,33 @@
 ; user=> (convertir-formato-impresion '("Las raices cuadradas de {} son +{:.8} y -{:.8}" 4.0 1.999999999985448 1.999999999985448))
 ; ("Las raices cuadradas de %.0f son +%.8f y -%.8f" 4.0 1.999999999985448 1.999999999985448)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn convertir-formato-impresion [] ())
+(defn cant-digits [f]
+  (apply str (rest (first (map second (re-seq #"\{(:.[0-9])*\}" f))))))
 
+(defn formato-impresion [f valor]
+  (let [digitos (cant-digits f)]
+    (cond
+      (string? valor) "%s"
+      (integer? valor) "%d"
+      (and (float? valor) (= (mod valor 1) 0.0)) "%.0f"
+      (and (float? valor) (not= (mod valor 1) 0.0)) (str "%" digitos "f")
+      :else "")))
+
+(defn convertir-formato-impresion-aux [formato args]
+  (if
+   (empty? args)
+    formato
+    (let [new-format (clojure.string/replace-first formato #"\{(:.[0-9])*\}" (formato-impresion formato (first args)))]
+      (convertir-formato-impresion-aux new-format (rest args)))))
+
+(defn convertir-formato-impresion [argumento]
+  (let [formato (first argumento)
+        args (rest argumento)]
+    (cons (convertir-formato-impresion-aux formato args) args)))
+(convertir-formato-impresion '("Hola, mundo!"))
+(convertir-formato-impresion '("- My name is {}, James {}.\n- Hello, {}{}{}!" "Bond" "Bond" 0 0 7))
+(convertir-formato-impresion '("{} elevado a la {} es\t{}" 2.0 2 4.0))
+(convertir-formato-impresion '("Las raices cuadradas de {} son +{:.8} y -{:.8}" 4.0 1.999999999985448 1.999999999985448))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; DIVIDIR: Recibe dos numeros y devuelve su cociente, manteniendo su tipo.
 ; Por ejemplo:
