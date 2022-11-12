@@ -1775,7 +1775,22 @@
           ; pila recibida: [1 0 0 3 4]
           ; pila al llamar recursivamente a interpretar: [1 0 0 7]
       ADD (let [res (aplicar-operador-diadico + pila)]
-            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs))))))
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+      PUSHFI (recur cod regs-de-act (inc cont-prg) (conj pila (second fetched)) mapa-regs)
+      PUSHFM (recur cod regs-de-act (inc cont-prg) (conj pila (get-in reg-actual [(second fetched) 1])) mapa-regs)
+      JMP (recur cod regs-de-act (second fetched) pila mapa-regs)
+      JC (let [res (if (last pila) (second fetched) (inc cont-prg))]
+           (recur cod regs-de-act res (vec (butlast pila)) mapa-regs))
+      CAL (let [pos_funcion (second fetched)
+                args (mapa-regs pos_funcion)]
+            (recur cod (conj regs-de-act args) pos_funcion (conj pila (inc cont-prg)) mapa-regs))
+      RETN (recur cod (vec (butlast regs-de-act)) (last pila) (vec (butlast pila)) mapa-regs)
+      NL (do (println)
+             (recur cod regs-de-act (inc cont-prg) pila mapa-regs))
+      FLUSH (do (flush)
+                (recur cod regs-de-act (inc cont-prg) pila mapa-regs))
+      )))
+      
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; LAS FUNCIONES QUE SIGUEN DEBERAN SER IMPLEMENTADAS PARA QUE ANDE EL INTERPRETE DE RUST 
@@ -2050,9 +2065,9 @@
 (defn convertir-formato-impresion-aux [formato args]
   (if
    (empty? args)
-    formato
-    (let [new-format (clojure.string/replace-first formato #"\{(:.[0-9])*\}" (formato-impresion formato (first args)))]
-      (convertir-formato-impresion-aux new-format (rest args)))))
+   formato
+   (let [new-format (clojure.string/replace-first formato #"\{(:.[0-9])*\}" (formato-impresion formato (first args)))]
+     (convertir-formato-impresion-aux new-format (rest args)))))
 
 (defn convertir-formato-impresion [argumento]
   (let [formato (first argumento)
