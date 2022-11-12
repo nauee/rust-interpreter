@@ -124,3 +124,13 @@
   (is
    (= (fixup [(symbol "{") (list 'x '= 20 (symbol ";") (symbol "}") (symbol ";") 'println! (symbol "(") "{}" (symbol ",") 'x (symbol ")") (symbol "}")) ['fn 'main (symbol "(") (symbol ")") (symbol "{") 'let 'x (symbol ":") 'i64 (symbol ";") 'if false (symbol "{") 'x '= 10 (symbol ";") (symbol "}") 'else] :sin-errores [[0 1 2] [['main ['fn [() ()]] 2] ['x ['var-inmut 'i64] 0]]] 1 [['CAL 2] 'HLT ['PUSHFI false] ['JC 5] ['JMP '?] ['PUSHFI 10] ['POP 0] ['JMP '?]] [[2 ['i64 nil]]]] 7)
       [(symbol "{") (list 'x '= 20 (symbol ";") (symbol "}") (symbol ";") 'println! (symbol "(") "{}" (symbol ",") 'x (symbol ")") (symbol "}")) ['fn 'main (symbol "(") (symbol ")") (symbol "{") 'let 'x (symbol ":") 'i64 (symbol ";") 'if false (symbol "{") 'x '= 10 (symbol ";") (symbol "}") 'else] :sin-errores [[0 1 2] [['main ['fn [() ()]] 2] ['x ['var-inmut 'i64] 0]]] 1 [['CAL 2] 'HLT ['PUSHFI false] ['JC 5] ['JMP '?] ['PUSHFI 10] ['POP 0] ['JMP 8]] [[2 ['i64 nil]]]])))
+
+(deftest pasar-a-int-test
+  (testing "Pasar a int")
+  (is (= (pasar-a-int "10") 10))
+  (is (= (pasar-a-int "0 ") 0))
+  (is (= (pasar-a-int "10 por 10 es 20") "10 por 10 es 20"))
+  (is (= (pasar-a-int 10.0) 10))
+  (is (= (pasar-a-int 10) 10))
+  (is (= (pasar-a-int 'a) 'a))
+  (is (= (pasar-a-int [10.0]) [10.0])))

@@ -2098,7 +2098,15 @@
 ; user=> (pasar-a-int [10.0])
 ; [10.0]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn pasar-a-int [] ())
+(defn string-es-numero? [s]
+  (let [s (clojure.string/trim s)]
+    (= (re-seq #"[0-9]*.[0-9]*" s) [s])))
+
+(defn pasar-a-int [elemento]
+  (cond
+    (string? elemento) (if (string-es-numero? elemento) (clojure.edn/read-string (first (re-seq #"\d+" elemento))) elemento)
+    (float? elemento) (int elemento)
+    :else elemento))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PASAR-A-FLOAT: Recibe un elemento. Si puede devolverlo expresado como un numero de punto flotante, lo hace. Si no,
