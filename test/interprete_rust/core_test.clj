@@ -188,3 +188,10 @@
   (is (= (pasar-a-float 12.5) 12.5))
   (is (= (pasar-a-float 'a) 'a))
   (is (= (pasar-a-float [10]) [10])))
+
+(deftest cargar-en-ult-reg-test
+  (testing "Cargar en ultimo registro")
+  (is (= (cargar-en-ult-reg [[['String "2"] ['i64 6] ['i64 2] ['i64 3] ['i64 0]] [['i64 nil] ['i64 nil]]] 1 'i64 0)
+         [[['String "2"] ['i64 6] ['i64 2] ['i64 3] ['i64 0]] [['i64 nil] ['i64 0]]]))
+  (is (= (cargar-en-ult-reg [[['String "2"] ['i64 6] ['i64 2] ['i64 3] ['i64 0]] [['i64 nil] ['i64 0]]] 0 'f64 3)
+         [[['String "2"] ['i64 6] ['i64 2] ['i64 3] ['i64 0]] [['f64 3] ['i64 0]]])))
