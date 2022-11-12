@@ -1819,7 +1819,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn map_ptocomas [e1 e2]
   (cond
-    (and (= e1 (symbol "}")) (nil? (some #(= e2 %) [(symbol "}") 'fn 'else]))) (list e1 (symbol ";"))
+    (and (= e1 (symbol "}")) (nil? (some #(= e2 %) [(symbol "}") 'fn 'else (symbol ")")]))) (list e1 (symbol ";"))
     :else e1
     ))
 
