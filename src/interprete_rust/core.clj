@@ -2082,7 +2082,16 @@
 ; user=> (compatibles? 'char ['a])
 ; true
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn compatibles? [] ())
+(defn compatibles? [tipo valor]
+  (cond
+    (and (= tipo 'bool) (or (= valor true) (= valor false))) true
+    (vector? valor) (= (map #(compatibles? tipo %) valor) (repeat (count valor) 'true))
+    (and (integer? valor) (or (= tipo 'i64) (= tipo 'i32) (= tipo 'i16) (= tipo 'i8) (= tipo 'u64) (= tipo 'u32) (= tipo 'u16) (= tipo 'u8) (= tipo 'usize))) true
+    (and (float? valor) (or (= tipo 'f64) (= tipo 'f32))) true
+    (and (string? valor) (= tipo 'String)) true
+    (and (char? valor) (= tipo 'char)) true
+    :else false
+    ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PASAR-A-INT: Recibe un elemento. Si puede devolverlo expresado como un entero, lo hace. Si no, lo devuelve intacto.
