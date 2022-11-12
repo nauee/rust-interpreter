@@ -2104,7 +2104,7 @@
 
 (defn pasar-a-int [elemento]
   (cond
-    (string? elemento) (if (string-es-numero? elemento) (clojure.edn/read-string (first (re-seq #"\d+" elemento))) elemento)
+    (string? elemento) (if (string-es-numero? elemento) (clojure.edn/read-string (first (re-seq #"[0-9]+" elemento))) elemento)
     (float? elemento) (int elemento)
     :else elemento))
 
@@ -2123,7 +2123,11 @@
 ; user=> (pasar-a-float [10])
 ; [10]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn pasar-a-float [] ())
+(defn pasar-a-float [elemento]
+  (cond
+    (string? elemento) (if (string-es-numero? elemento) (float (clojure.edn/read-string (first (re-seq #"[0-9]+.[0-9]*" elemento)))) elemento)
+    (int? elemento) (float elemento)
+    :else elemento))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CARGAR-EN-ULT-REG: Recibe un vector de registros de activacion, una direccion, un tipo y un valor. Devuelve el

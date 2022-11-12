@@ -128,9 +128,21 @@
 (deftest pasar-a-int-test
   (testing "Pasar a int")
   (is (= (pasar-a-int "10") 10))
-  (is (= (pasar-a-int "0 ") 0))
+  (is (= (pasar-a-int " 0 ") 0))
+  (is (= (pasar-a-int "12.5") 12))
   (is (= (pasar-a-int "10 por 10 es 20") "10 por 10 es 20"))
   (is (= (pasar-a-int 10.0) 10))
   (is (= (pasar-a-int 10) 10))
   (is (= (pasar-a-int 'a) 'a))
   (is (= (pasar-a-int [10.0]) [10.0])))
+
+(deftest pasar-a-float-test
+  (testing "Pasar a float")
+  (is (= (pasar-a-float "10") 10.0))
+  (is (= (pasar-a-float " 0 ") 0.0))
+  (is (= (pasar-a-float "12.5") 12.5))
+  (is (= (pasar-a-int "2.5 por 2 es 5") "2.5 por 2 es 5"))
+  (is (= (pasar-a-float 10) 10.0))
+  (is (= (pasar-a-float 12.5) 12.5))
+  (is (= (pasar-a-float 'a) 'a))
+  (is (= (pasar-a-float [10]) [10])))
